@@ -1,0 +1,10 @@
+@media (max-width: 767px) {
+    .nav-item {
+        margin-left: 0px;
+    }
+
+    .nav-link {
+        margin-left: 290px;
+
+    }
+}

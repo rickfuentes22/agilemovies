@@ -34,7 +34,7 @@ const Login = () => {
                     setSuccessMessage('Inicio de sesión exitoso!');
                     setError(null);
 
-                    navigate('/estrenos');
+                    navigate('/home');
                 } else {
                     throw new Error('No se recibió el token o el refresh_token.');
                 }
