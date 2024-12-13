@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import Navbar from "./Navbar";
+import Popular from "./Popular";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Estrenos = () => {
     const [movies, setMovies] = useState([]);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
     const [imageBaseUrl, setImageBaseUrl] = useState('');
 
     useEffect(() => {
@@ -16,7 +20,7 @@ const Estrenos = () => {
                 return;
             }
 
-            const url = `http://161.35.140.236:9005/api/movies/now_playing?page=${page}`;
+            const url = `http://161.35.140.236:9005/api/movies/now_playing`;
 
             try {
                 let response = await fetch(url, {
@@ -59,38 +63,82 @@ const Estrenos = () => {
         };
 
         fetchMovies();
-    }, [page]);
+    }, []);
 
-    const handleNextPage = () => setPage((prevPage) => prevPage + 1);
-    const handlePreviousPage = () => setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const chunkArray = (array, chunkSize) => {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            chunks.push(array.slice(i, i + chunkSize));
+        }
+        return chunks;
+    };
+
+    const movieChunks = chunkArray(movies, 4);
 
     return (
-        <div>
-            <h1>Películas en Cartelera</h1>
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            <ul>
-                {movies && movies.length > 0 ? (
-                    movies.map((movie) => (
-                        <li key={movie.id}>
-                            <h3>{movie.title}</h3>
-                            <p>{movie.overview}</p>
-                            <img
-                                src={`${imageBaseUrl}${movie.poster_path}`}
-                                alt={movie.title}
-                            />
-                        </li>
-                    ))
-                ) : (
-                    <p>No hay películas disponibles.</p>
-                )}
-            </ul>
+        <div style={{ marginTop: '67px' }}>
+            <Navbar />
+            <div className="container mt-5">
+                <h1 className="text-center mb-4 ">Películas en Estreno</h1>
 
-            <div>
-                <button onClick={handlePreviousPage} disabled={page === 1}>Anterior</button>
-                <span>Página {page}</span>
-                <button onClick={handleNextPage}>Siguiente</button>
+                {error && <p className="text-danger text-center">Error: {error}</p>}
+
+                {movies.length > 0 ? (
+                    <div
+                        id="moviesCarousel"
+                        className="carousel slide"
+                        data-bs-ride="carousel"
+                        data-bs-interval="3000"
+                    >
+                        <div className="carousel-inner">
+                            {movieChunks.map((chunk, index) => (
+                                <div
+                                    key={index}
+                                    className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                                >
+                                    <div className="row">
+                                        {chunk.map((movie) => (
+                                            <div key={movie.id} className="col-3 d-flex justify-content-center">
+                                                <img
+                                                    src={`${imageBaseUrl}${movie.poster_path}`}
+                                                    className="w-50"
+                                                    alt={movie.title}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <button
+                            className="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#moviesCarousel"
+                            data-bs-slide="prev"
+                        >
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Anterior</span>
+                        </button>
+                        <button
+                            className="carousel-control-next"
+                            type="button"
+                            data-bs-target="#moviesCarousel"
+                            data-bs-slide="next"
+                        >
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
+                ) : (
+                    <p className="text-center">Cargando películas...</p>
+                )}
             </div>
+
+
+
         </div>
+
+
     );
 };
 

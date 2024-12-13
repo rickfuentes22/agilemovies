@@ -9,6 +9,7 @@ import Popular from './pages/Popular';
 
 
 
+
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/estrenos" element={<Estrenos />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/popular" element={<Popular />} />
+
 
 
       </Routes>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "../styles/Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -24,9 +25,6 @@ const Login = () => {
             if (data && data.data && data.data.payload) {
                 const { token, refresh_token } = data.data.payload;
 
-                console.log('Token:', token);
-                console.log('Refresh Token:', refresh_token);
-
                 if (token && refresh_token) {
                     localStorage.setItem('token', token);
                     localStorage.setItem('refresh_token', refresh_token);
@@ -48,34 +46,38 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h1>Iniciar Sesión</h1>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Contraseña:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Iniciar Sesión</button>
-            </form>
+        <div className="login-container">
+            <div className="login-box">
+                <h1 className="login-title">Iniciar Sesión</h1>
+                <form onSubmit={handleLogin} className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="username">Username:</label>
+                        <input
+                            type="text"
+                            id="username"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Contraseña:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn-submit">Iniciar Sesión</button>
+                </form>
 
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                {error && <p className="error-message">Error: {error}</p>}
+                {successMessage && <p className="success-message">{successMessage}</p>}
+            </div>
         </div>
     );
 };
