@@ -85,7 +85,7 @@ const Estrenos = () => {
                                             >
                                                 <img
                                                     src={`${imageBaseUrl}${movie.poster_path}`}
-                                                    className="w-50"
+                                                    style={{ width: '100%' }}  // Ajusta el porcentaje según lo que necesites
                                                     alt={movie.title}
                                                 />
                                             </div>

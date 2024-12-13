@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from "./Navbar";
-import '../styles/EstrenoDetalle.css';
+import '../styles/PopularDetalle.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PopularDetalle = () => {
@@ -115,8 +115,8 @@ const PopularDetalle = () => {
                     </div>
                 </div>
 
-                <h2 className="mt-5">Reparto</h2>
-                <div id="actorsCarousel" className="carousel slide" data-bs-ride="carousel">
+                <h2 className="text-center mt-5">Reparto</h2>
+                <div style={{ marginTop: '67px' }} id="actorsCarousel" className="carousel slide" data-bs-ride="carousel">
                     <div className="carousel-inner">
                         {actors.map((actor, index) => (
                             index % 4 === 0 ? (
