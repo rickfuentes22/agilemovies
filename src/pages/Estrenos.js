@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from "./Navbar";
-import Popular from "./Popular";
-
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Estrenos = () => {
     const [movies, setMovies] = useState([]);
-    const [error, setError] = useState(null);
     const [imageBaseUrl, setImageBaseUrl] = useState('');
-
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchMovies = async () => {
             let token = localStorage.getItem('token');
@@ -27,25 +24,6 @@ const Estrenos = () => {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
-
-                if (response.status === 401) {
-                    const refreshResponse = await fetch('http://161.35.140.236:9005/api/auth/refresh', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ refresh_token }),
-                    });
-
-                    if (!refreshResponse.ok) throw new Error('Error al renovar el token');
-
-                    const refreshData = await refreshResponse.json();
-                    token = refreshData.token;
-                    localStorage.setItem('token', token);
-
-                    response = await fetch(url, {
-                        method: 'GET',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                    });
-                }
 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
@@ -65,6 +43,10 @@ const Estrenos = () => {
         fetchMovies();
     }, []);
 
+    const handleMovieClick = (movieId) => {
+        navigate(`/estrenodetalle/${movieId}`);
+    };
+
     const chunkArray = (array, chunkSize) => {
         const chunks = [];
         for (let i = 0; i < array.length; i += chunkSize) {
@@ -79,10 +61,8 @@ const Estrenos = () => {
         <div style={{ marginTop: '67px' }}>
             <Navbar />
             <div className="container mt-5">
-                <h1 className="text-center mb-4 ">Películas en Estreno</h1>
-
+                <h1 className="text-center mb-4">Películas en Estreno</h1>
                 {error && <p className="text-danger text-center">Error: {error}</p>}
-
                 {movies.length > 0 ? (
                     <div
                         id="moviesCarousel"
@@ -98,7 +78,11 @@ const Estrenos = () => {
                                 >
                                     <div className="row">
                                         {chunk.map((movie) => (
-                                            <div key={movie.id} className="col-3 d-flex justify-content-center">
+                                            <div
+                                                key={movie.id}
+                                                className="col-3 d-flex justify-content-center"
+                                                onClick={() => handleMovieClick(movie.id)}
+                                            >
                                                 <img
                                                     src={`${imageBaseUrl}${movie.poster_path}`}
                                                     className="w-50"
@@ -133,12 +117,7 @@ const Estrenos = () => {
                     <p className="text-center">Cargando películas...</p>
                 )}
             </div>
-
-
-
         </div>
-
-
     );
 };
 

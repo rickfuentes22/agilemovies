@@ -5,9 +5,8 @@ import Home from './pages/Home';
 import Estrenos from './pages/Estrenos';
 import Navbar from './pages/Navbar';
 import Popular from './pages/Popular';
-
-
-
+import EstrenoDetalle from './pages/EstrenoDetalle';
+import PopularDetalle from './pages/PopularDetalle';
 
 
 function App() {
@@ -19,8 +18,9 @@ function App() {
         <Route path="/estrenos" element={<Estrenos />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/popular" element={<Popular />} />
-
-
+        {/* Asegúrate de que la ruta de MovieDetails esté correctamente definida */}
+        <Route path="/estrenodetalle/:id" element={<EstrenoDetalle />} />
+        <Route path="/populardetalle/:id" element={<PopularDetalle />} />
 
       </Routes>
     </Router>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useNavigate } from 'react-router-dom';
 
 const Popular = () => {
     const [movies, setMovies] = useState([]);
@@ -9,8 +10,8 @@ const Popular = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const navigate = useNavigate();
 
-    // Fetch movies
     const fetchMovies = async (page) => {
         let token = localStorage.getItem('token');
         const refresh_token = localStorage.getItem('refresh_token');
@@ -69,12 +70,10 @@ const Popular = () => {
         }
     };
 
-    // Initial load and subsequent pages
     useEffect(() => {
         fetchMovies(page);
     }, [page]);
 
-    // Handle infinite scroll
     useEffect(() => {
         const handleScroll = () => {
             if (loading || !hasMore) return;
@@ -83,7 +82,6 @@ const Popular = () => {
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = document.documentElement.clientHeight;
 
-            // Cargar más películas solo cuando llegues al final exacto de la página
             if (scrollTop + clientHeight >= scrollHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
@@ -93,6 +91,10 @@ const Popular = () => {
 
         return () => window.removeEventListener('scroll', handleScroll);
     }, [loading, hasMore]);
+
+    const handleMovieClick = (movieId) => {
+        navigate(`/populardetalle/${movieId}`);
+    };
 
     return (
         <div className="container py-5">
@@ -104,7 +106,11 @@ const Popular = () => {
                 <div className="row g-4">
                     {movies.map((movie) => (
                         <div key={movie.id} className="col-6 col-md-4 col-lg-3">
-                            <div className="card h-100 text-center">
+                            <div
+                                className="card h-100 text-center"
+                                onClick={() => handleMovieClick(movie.id)}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <img
                                     src={`${imageBaseUrl}${movie.poster_path}`}
                                     className="card-img-top"
